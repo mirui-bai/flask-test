@@ -3,7 +3,7 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment(local_js="https://static.pdflibr.com/momentjs/moment.min.js") }}
-{{ moment.lang('ch') }}
+{{ moment.lang('zh-CN') }}
 {% endblock %}
 
 {% block head %}
@@ -12,6 +12,7 @@
       type="image/x-icon">
 <link rel="icon" href="{{ url_for('static',filename='favicon.ico') }}"
       type="image/x-icon">
+
 {% endblock %}
 
 {% block title %}Flasky{% endblock %}
@@ -41,6 +42,13 @@
 
 {% block content %}
 <div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-waring">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}

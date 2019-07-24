@@ -1,7 +1,8 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import Form
+
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from datetime import datetime
@@ -21,6 +22,9 @@ def user(name):
 def index():
     form = NameForm()
     if form.validate_on_submit():
+        old_name = session.get("name")
+        if old_name is not None and old_name != form.name.data:
+            flash('Look like you have change your name!')
         session['name'] = form.name.data
         return redirect(url_for('index'))
     return render_template('index.html',
