@@ -7,6 +7,7 @@ from wtforms.validators import Required
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Shell, Manager
+from flask_migrate import Migrate, MigrateCommand
 
 app = Flask(__name__)
 manager = Manager(app)
@@ -17,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Bootstrap(app)
 moment = Moment(app)
+migrate = Migrate(app, db)
 
 
 @app.route('/<name>')
@@ -88,6 +90,7 @@ def make_shell_context():
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     manager.run()
