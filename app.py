@@ -6,8 +6,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from flask_script import Shell, Manager
 
 app = Flask(__name__)
+manager = Manager(app)
 app.config['SECRET_KEY'] = 'hard to guess strings'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ohmysql@localhost:3306/flask_test'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
@@ -81,5 +83,11 @@ class NameForm(Form):
     submit = SubmitField('Submit')
 
 
+def make_shell_context():
+    return dict(app=app, db=db, User=User, Role=Role)
+
+
+manager.add_command('shell', Shell(make_context=make_shell_context))
+
 if __name__ == '__main__':
-    app.run()
+    manager.run()
