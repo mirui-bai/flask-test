@@ -6,19 +6,39 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask_script import Shell, Manager
+
 from flask_migrate import Migrate, MigrateCommand
+from flask_mail import Mail, Message
+
+from flask_script import Shell, Manager
+
+
+import os
 
 app = Flask(__name__)
-manager = Manager(app)
+
+
 app.config['SECRET_KEY'] = 'hard to guess strings'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ohmysql@localhost:3306/flask_test'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# app.config['MAIL_SERVER'] = 'smtp.mxhichina.com'
+app.config['MAIL_SERVER'] = 'smtp.163.com'
+app.config['MAIL_PORT'] = 25
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMIN')
+app.config['FLASK_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
+app.config['FLASKY_MAIL_SENDER'] = 'Flasky Admin <xxxxxxxx@163.com>'
+
 db = SQLAlchemy(app)
 Bootstrap(app)
 moment = Moment(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
+manager = Manager(app)
 
 
 @app.route('/<name>')
@@ -33,12 +53,13 @@ def index():
         user = User.query.filter_by(username=form.name.data).first()
         if user is None:
             user = User(username=form.name.data)
-            print(user)
             db.session.add(user)
             session['known'] = False
+            if app.config['FLASKY_ADMIN']:
+                send_email(app.config['FLASKY_ADMIN'], 'New User',
+                           'mail/new_user', user=user)
         else:
             session['known'] = True
-            # flash('Look like you have change your name!')
         session['name'] = form.name.data
         form.name.data = ''
         return redirect(url_for('index'))
@@ -46,7 +67,7 @@ def index():
                            current_time=datetime.utcnow(),
                            form=form,
                            name=session.get('name'),
-                           known=session.get('known')
+                           known=session.get('known', False)
                            )
 
 
@@ -87,6 +108,14 @@ class NameForm(Form):
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role)
+
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASK_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.text', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
