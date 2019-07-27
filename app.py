@@ -14,6 +14,7 @@ from flask_script import Shell, Manager
 
 
 import os
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -31,7 +32,7 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMIN')
 app.config['FLASK_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
-app.config['FLASKY_MAIL_SENDER'] = 'Flasky Admin <xxxxxxxx@163.com>'
+app.config['FLASKY_MAIL_SENDER'] = 'Flasky Admin <xxxxxx@163.com>'
 
 db = SQLAlchemy(app)
 Bootstrap(app)
@@ -110,12 +111,19 @@ def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role)
 
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
 def send_email(to, subject, template, **kwargs):
     msg = Message(app.config['FLASK_MAIL_SUBJECT_PREFIX'] + subject,
                   sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
     msg.body = render_template(template + '.text', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
-    mail.send(msg)
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    return thr
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
