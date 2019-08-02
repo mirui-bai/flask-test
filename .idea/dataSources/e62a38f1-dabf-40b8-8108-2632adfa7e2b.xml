@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="flask_test@localhost">
+<dataSource name="flask_blog@localhost">
   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.15">
     <root id="1">
-      <ServerVersion>5.7.26</ServerVersion>
+      <ServerVersion>5.7.27</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
       <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
       <DefaultCasing>exact</DefaultCasing>
@@ -17,11 +17,11 @@
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="5" parent="1" name="flask_blog">
+      <Current>1</Current>
+      <Visible>1</Visible>
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="6" parent="1" name="flask_test">
-      <Current>1</Current>
-      <Visible>1</Visible>
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="7" parent="1" name="information_schema">
@@ -933,8 +933,8 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="236" parent="6" name="roles"/>
-    <table id="237" parent="6" name="users"/>
+    <table id="236" parent="5" name="roles"/>
+    <table id="237" parent="5" name="users"/>
     <column id="238" parent="236" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
@@ -968,37 +968,56 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="244" parent="237" name="username">
+    <column id="244" parent="237" name="email">
       <Position>2</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="245" parent="237" name="role_id">
+    <column id="245" parent="237" name="username">
       <Position>3</Position>
+      <DataType>varchar(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="246" parent="237" name="role_id">
+      <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="246" parent="237" name="ix_users_username">
+    <column id="247" parent="237" name="password_hash">
+      <Position>5</Position>
+      <DataType>varchar(128)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="248" parent="237" name="ix_users_email">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <index id="249" parent="237" name="ix_users_username">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="247" parent="237" name="role_id">
+    <index id="250" parent="237" name="role_id">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="248" parent="237" name="PRIMARY">
+    <key id="251" parent="237" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="249" parent="237" name="ix_users_username">
+    <key id="252" parent="237" name="ix_users_email">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>ix_users_email</UnderlyingIndexName>
+    </key>
+    <key id="253" parent="237" name="ix_users_username">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>ix_users_username</UnderlyingIndexName>
     </key>
-    <foreign-key id="250" parent="237" name="users_ibfk_1">
+    <foreign-key id="254" parent="237" name="users_ibfk_1">
       <ColNames>role_id</ColNames>
-      <RefSchemaName>flask_test</RefSchemaName>
+      <RefSchemaName>flask_blog</RefSchemaName>
       <RefTableName>roles</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
