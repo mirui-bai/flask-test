@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - Confirm{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1><p>You Account  Unconfirmed</p></h1>
+    <br>
+    <p><h6>Don`t receive confirmation email ?</h6></p>
+    <p><a href="{{ url_for('auth.resend_confirmation') }}">
+        Click here to resend a confirmation email !
+    </a></p>
+</div>
+{% endblock %}

@@ -30,8 +30,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
 
     @property
     def password(self):
@@ -56,8 +54,29 @@ class User(UserMixin, db.Model):
             data = s.loads(token)
         except:
             return False
-        if data.get(['confirm']) != self.id:
+        if data.get('confirm') != self.id:
             return False
         self.confirmed = True
         db.session.add(self)
         return True
+
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id}).decode('utf-8')
+
+    @staticmethod
+    def reset_password(token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        user = User.query.get(data.get('reset'))
+        if user is None:
+            return False
+        user.password = new_password
+        db.session.add(user)
+        return True
+
+    def __repr__(self):
+        return '<User %r>' % self.username
