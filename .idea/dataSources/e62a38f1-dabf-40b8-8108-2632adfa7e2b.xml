@@ -962,80 +962,94 @@
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="244" parent="238" name="ix_roles_name">
+    <column id="244" parent="238" name="default">
+      <Position>3</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="245" parent="238" name="permissions">
+      <Position>4</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="246" parent="238" name="ix_roles_name">
       <ColNames>name</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="245" parent="238" name="PRIMARY">
+    <index id="247" parent="238" name="ix_roles_default">
+      <ColNames>default</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="248" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="246" parent="238" name="ix_roles_name">
+    <key id="249" parent="238" name="ix_roles_name">
       <ColNames>name</ColNames>
       <UnderlyingIndexName>ix_roles_name</UnderlyingIndexName>
     </key>
-    <column id="247" parent="239" name="id">
+    <column id="250" parent="239" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="248" parent="239" name="email">
+    <column id="251" parent="239" name="email">
       <Position>2</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="249" parent="239" name="username">
+    <column id="252" parent="239" name="username">
       <Position>3</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="250" parent="239" name="role_id">
+    <column id="253" parent="239" name="role_id">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="251" parent="239" name="password_hash">
+    <column id="254" parent="239" name="password_hash">
       <Position>5</Position>
       <DataType>varchar(128)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="252" parent="239" name="confirmed">
+    <column id="255" parent="239" name="confirmed">
       <Position>6</Position>
       <DataType>tinyint(1)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="253" parent="239" name="ix_users_email">
+    <index id="256" parent="239" name="ix_users_email">
       <ColNames>email</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="254" parent="239" name="ix_users_username">
+    <index id="257" parent="239" name="ix_users_username">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="255" parent="239" name="role_id">
+    <index id="258" parent="239" name="role_id">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="256" parent="239" name="PRIMARY">
+    <key id="259" parent="239" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="257" parent="239" name="ix_users_email">
+    <key id="260" parent="239" name="ix_users_email">
       <ColNames>email</ColNames>
       <UnderlyingIndexName>ix_users_email</UnderlyingIndexName>
     </key>
-    <key id="258" parent="239" name="ix_users_username">
+    <key id="261" parent="239" name="ix_users_username">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>ix_users_username</UnderlyingIndexName>
     </key>
-    <foreign-key id="259" parent="239" name="users_ibfk_1">
+    <foreign-key id="262" parent="239" name="users_ibfk_1">
       <ColNames>role_id</ColNames>
       <RefSchemaName>flask_blog</RefSchemaName>
       <RefTableName>roles</RefTableName>

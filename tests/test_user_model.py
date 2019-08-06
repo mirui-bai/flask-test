@@ -1,5 +1,5 @@
 import unittest
-from app.models import User
+from app.models import User, Role, Permission, AnonymousUser
 from app import db
 
 
@@ -23,8 +23,6 @@ class UserModelTestCase(unittest.TestCase):
         u2 = User(password='dog')
         self.assertTrue(u.password_hash != u2.password_hash)
 
-
-
     def test_valid_reset_token(self):
         u = User(password='cat')
         db.session.add(u)
@@ -40,3 +38,13 @@ class UserModelTestCase(unittest.TestCase):
         token = u.generate_reset_token()
         self.assertFalse(User.reset_password(token + 'a', 'horse'))
         self.assertTrue(u.verify_password('cat'))
+
+    def test_roles_and_permissions(self):
+        Role.insert_roles()
+        u = User(email='1770658645@qq.com', password='cat')
+        self.assertTrue(u.can(Permission.WRITE_ARTICLES))
+        self.assertFalse(u.can(Permission.MODERATE_COMMENTS))
+
+    def test_anonymous_user(self):
+        u = AnonymousUser()
+        self.assertFalse(u.can(Permission.FOLLOW))

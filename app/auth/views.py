@@ -2,10 +2,12 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, login_required, current_user
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm, \
     PasswordResetForm, PasswordResetRequestForm, ChangeEmailForm
+
 from . import auth
 from .. import db
-from ..models import User
+from ..models import User, Permission
 from ..email import send_email
+from ..decorators import admin_required, permissions_required
 
 
 @auth.route('/login', methods=['Get', 'Post'])
@@ -167,3 +169,17 @@ def change_email(token):
     else:
         flash('Invalid request')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/admin')
+@login_required
+@admin_required
+def admin_only():
+    return '<h1>admin</h1>'
+
+
+@auth.route('/moderators')
+@login_required
+@permissions_required(Permission.MODERATE_COMMENTS)
+def moderators():
+    return '<h1>moderators</h1>'
