@@ -34,8 +34,17 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    MAIL_SERVER = 'smtp.163.com'
+    MAIL_PORT = 25
+    MAIL_USE_TLS = True
+
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'aglassboy@163.com'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or '741852l'
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URL') or \
-                              'mysql+pymysql://root:ohmysql@localhost:3306/flask_blog'
+                              'mysql+pymysql://root:ohmysql@localhost:3306/flask_blog_test'
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_RECORD_QUERIES = True
 
 
 class ProductionConfig(Config):
