@@ -8,6 +8,11 @@ from flask_pagedown.fields import PageDownField
 from ..models import Role, User
 
 
+class CommentForm(FlaskForm):
+    body = StringField('Enter your comment:', validators=[Required()])
+    submit = SubmitField('Submit')
+
+
 class PostForm(FlaskForm):
     body = PageDownField('Whit`s on you mind ?', validators=[Required()])
     submit = SubmitField('Submit')

@@ -25,10 +25,12 @@
             <p>Last seen {{ moment(user.last_seen).fromNow(refresh=True) }}.</p>
 
             <p>
-                {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+                {% if current_user.can(Permission.FOLLOW)  %}
                 {% if not current_user.is_following(user) %}
-                    <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primaty">
+                {% if user != current_user %}
+                    <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">
                         Follow</a>
+                {% endif %}
                 {% else %}
                     <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default">
                         Unfollow</a>

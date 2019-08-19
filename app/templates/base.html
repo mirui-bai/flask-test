@@ -3,7 +3,7 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment(local_js="https://static.pdflibr.com/momentjs/moment.min.js") }}
-{{ moment.lang('zh-CN') }}
+{#{{ moment.locale('zh-CN') }}#}
 {% endblock %}
 
 {% block title %}Flasky{% endblock %}
@@ -14,6 +14,7 @@
       type="image/x-icon">
 <link rel="icon" href="{{ url_for('static',filename='favicon.ico') }}"
       type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
 
